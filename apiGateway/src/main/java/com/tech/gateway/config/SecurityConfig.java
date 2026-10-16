@@ -2,36 +2,36 @@ package com.tech.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
-@EnableReactiveMethodSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
-    SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .csrf(csrf -> csrf.disable())
 
                 // H2 Console Support (allow frames from same origin)
-                .headers(headers -> headers
-                        .frameOptions(frame -> frame.mode(
-                                org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN)))
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
 
-                .authorizeExchange(exchanges -> exchanges
+                .authorizeHttpRequests(auth -> auth
                         // --- API routes (token endpoint, versioned APIs) ---
-                        .pathMatchers(
+                        .requestMatchers(
                                 "/api/v1/**",
-                                "/api/auth/token"
+                                "/api/auth/token",
+                                "/h2-console/**",
+                                "/h2-console"
                         ).permitAll()
 
                         // --- Public Pages ---
-                        .pathMatchers(
+                        .requestMatchers(
                                 "/",
                                 "/login",
                                 "/contact",
@@ -59,21 +59,10 @@ public class SecurityConfig {
                                 "/msgDisplay",
                                 "/reset-password",
                                 "/resetPassword",
-                                "/submitResetPassword"
-                        ).permitAll()
-
-                        // --- Static resources ---
-                        .pathMatchers(
+                                "/submitResetPassword",
                                 "/css/**",
                                 "/js/**",
-                                "/images/**"
-                        ).permitAll()
-
-                        // --- H2 Console ---
-                        .pathMatchers("/h2-console/**").permitAll()
-
-                        // --- API docs & Actuator ---
-                        .pathMatchers(
+                                "/images/**",
                                 "/scalar.html",
                                 "/api-docs",
                                 "/api-docs/**",
@@ -81,10 +70,10 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // --- Admin Pages ---
-                        .pathMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         // --- Everything else requires authentication ---
-                        .anyExchange().authenticated()
+                        .anyRequest().authenticated()
                 );
 
         return http.build();
