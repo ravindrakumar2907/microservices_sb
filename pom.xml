@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://apache.org"
+         xmlns:xsi="http://w3.org"
+         xsi:schemaLocation="http://apache.org http://apache.org">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tech.gateway</groupId>
+    <artifactId>microservices-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging> <!-- Crucial: Must be set to pom -->
+
+    <!-- Add the exact folder names of your microservices here -->
+    <modules>
+        <module>apiGateway</module>
+        <module>eurekaServer</module>
+        <module>todoService</module>
+    </modules>
+</project>
