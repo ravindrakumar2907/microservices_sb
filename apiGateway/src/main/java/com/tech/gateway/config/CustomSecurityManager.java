@@ -3,19 +3,17 @@ package com.tech.gateway.config;
 import java.util.Date;
 import java.util.Optional;
 
-import com.api.entity.UserEntity;
-import com.api.service.UserService;
+
+import com.tech.gateway.bean.SessionInfo;
+import com.tech.gateway.cache.SPLocalCache;
+import com.tech.gateway.entity.UserEntity;
+import com.tech.gateway.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import com.api.custom.enums.UserStates;
-import com.api.dto.APIUser;
-import com.api.dto.SessionInfo;
-import com.api.service.serviceImple.APIUserServiceImpl;
-import com.api.service.serviceImple.SPLocalCache;
-import com.api.utils.Utils;
+
 
 @Component
 public class CustomSecurityManager {

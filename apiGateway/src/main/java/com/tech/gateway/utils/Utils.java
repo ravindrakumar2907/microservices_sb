@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import jakarta.xml.bind.DatatypeConverter;
+import java.util.HexFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,7 +94,7 @@ public class Utils {
 		}
 
 		byte[] digest = MessageDigest.getInstance(hashAlgorithm).digest(text.getBytes());
-		return DatatypeConverter.printHexBinary(digest).toUpperCase();
+		return HexFormat.of().withUpperCase().formatHex(digest);
 	}
 	
 	/***

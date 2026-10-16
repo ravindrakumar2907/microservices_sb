@@ -2,7 +2,6 @@ package com.tech.gateway.cache;
 
 import java.util.Optional;
 
-import com.api.dto.SessionInfo;
 import com.tech.gateway.bean.SessionInfo;
 
 public interface Cache {
