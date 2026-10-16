@@ -18,6 +18,11 @@ spring:
           predicates:
             - Path=/todos/**
 
+        - id: products-service-route
+          uri: lb://PRODUCTS-SERVICE # "lb://" stands for Load Balancer. It fetches the real IP from Eureka.
+          predicates:
+            - Path=/products/**
+
 # Connects your Gateway to the Eureka server registry
 eureka:
   client:

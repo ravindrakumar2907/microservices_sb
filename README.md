@@ -12,6 +12,11 @@ mvn clean install -DskipTests
 
 ## Authentication (obtain token)
 Obtain a token (replace username/password):
+Credentials:
+
+user1@example.com / password1
+
+user2@example.com / password2
 
 curl -s -X POST http://localhost:8080/v1/auth/token \
   -H 'Content-Type: application/json' \
@@ -36,8 +41,3 @@ Notes:
 - Token endpoint: POST /v1/auth/token on the API Gateway (http://localhost:8080).
 - Todo service endpoints are under http://localhost:8083/api/todo. The GET uses a query param id; POST accepts JSON with fields name, description, priority, status.
 
-Credentials:
-
-user1@example.com / password1
-
-user2@example.com / password2

@@ -14,5 +14,7 @@
         <module>apiGateway</module>
         <module>eurekaServer</module>
         <module>todoService</module>
+        <module>productsService</module>
+
     </modules>
 </project>
