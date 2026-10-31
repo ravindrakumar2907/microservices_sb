@@ -16,7 +16,18 @@ docker exec -u 0 -it jenkins apt-get update
 # 2. Install the Git package inside the container
 docker exec -u 0 -it jenkins apt-get install -y git
 
+apt-get install -y docker.io
+apt-get install -y docker-compose-plugin
+apt-get update
+apt-get install -y curl
 
+curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+-o /usr/local/lib/docker/cli-plugins/docker-compose
+chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+docker exec -it jenkins docker --version
+docker exec -it jenkins docker compose version
+docker exec -it jenkins docker compose version
 
 docker-compose.yml
     user: root

@@ -1,51 +1,67 @@
-version: '3.8'
-
 services:
-  # 1. Eureka Server (Starts first)
-  eurekaServer:
-    build: ./eurekaServer
+
+  # 1. Eureka Server
+  eureka-server:
+    image: microservices-eureka-server:latest
+    build:
+      context: ./eurekaServer
+    container_name: eureka-server
     ports:
       - "8761:8761"
     networks:
       - microservice-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8761/actuator/health || exit 1"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 10
+      start_period: 60s
+    restart: unless-stopped
 
-  # 2. API Gateway (Waits for Eureka)
-  apiGateway:
-    build: ./apiGateway
+  # 2. API Gateway
+  api-gateway:
+    image: microservices-api-gateway:latest
+    build:
+      context: ./apiGateway
+    container_name: api-gateway
     ports:
       - "8080:8080"
     networks:
       - microservice-network
     depends_on:
-      eurekaServer:
+      eureka-server:
         condition: service_healthy
+    restart: unless-stopped
 
-  # 3. Products Service (Waits for Eureka)
-  productsService:
-    build: ./productsService
+  # 3. Products Service
+  products-service:
+    image: microservices-products-service:latest
+    build:
+      context: ./productsService
+    container_name: products-service
     ports:
       - "8081:8081"
     networks:
       - microservice-network
     depends_on:
-      eurekaServer:
+      eureka-server:
         condition: service_healthy
+    restart: unless-stopped
 
-  # 4. Todo Service (Waits for Eureka)
-  todoService:
-    build: ./todoService
+  # 4. Todo Service
+  todo-service:
+    image: microservices-todo-service:latest
+    build:
+      context: ./todoService
+    container_name: todo-service
     ports:
       - "8082:8082"
     networks:
       - microservice-network
     depends_on:
-      eurekaServer:
+      eureka-server:
         condition: service_healthy
+    restart: unless-stopped
 
 networks:
   microservice-network:

@@ -1,9 +1,15 @@
 #!/bin/bash
+
+set -e
+
 echo "🚀 Starting all microservices..."
 
-# --build forces Docker to recreate images with your latest code updates
-# -d runs the containers in the detached (background) mode
+docker compose down
+
 docker compose up -d --build
 
-echo "📊 Current status of containers:"
+echo "📊 Current status of containers..."
+
 docker compose ps
+
+echo "✅ All microservices started successfully!"
