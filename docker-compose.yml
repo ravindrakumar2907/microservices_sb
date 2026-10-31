@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # 1. Eureka Server (Starts first)
+  eurekaServer:
+    build: ./eurekaServer
+    ports:
+      - "8761:8761"
+    networks:
+      - microservice-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # 2. API Gateway (Waits for Eureka)
+  apiGateway:
+    build: ./apiGateway
+    ports:
+      - "8080:8080"
+    networks:
+      - microservice-network
+    depends_on:
+      eurekaServer:
+        condition: service_healthy
+
+  # 3. Products Service (Waits for Eureka)
+  productsService:
+    build: ./productsService
+    ports:
+      - "8081:8081"
+    networks:
+      - microservice-network
+    depends_on:
+      eurekaServer:
+        condition: service_healthy
+
+  # 4. Todo Service (Waits for Eureka)
+  todoService:
+    build: ./todoService
+    ports:
+      - "8082:8082"
+    networks:
+      - microservice-network
+    depends_on:
+      eurekaServer:
+        condition: service_healthy
+
+networks:
+  microservice-network:
+    driver: bridge

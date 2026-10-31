@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'mavan-3.10.0'
+    }
+
+    environment {
+         BUILD_NO = '1.0'
+    }
+
+    stages {
+        // Step 1: Start Eureka Server first sequentially
+        stage('Start Eureka Server') {
+            steps {
+                echo 'Starting Eureka Server...'
+                dir('eurekaServer') {
+                    // Running in background so Jenkins doesn't hang waiting for the server to stop
+                    sh 'mvn clean compile spring-boot:run &'
+                }
+                echo 'Waiting for Eureka Server to initialize...'
+                sleep time: 15, unit: 'SECONDS' // Gives Eureka 15 seconds to spin up before clients connect
+            }
+        }
+
+        // Step 2: Run the remaining microservices at the exact same time
+        stage('Start Remaining Microservices') {
+            parallel {
+                stage('API Gateway') {
+                    steps {
+                        dir('apiGateway') {
+                            sh 'mvn clean compile spring-boot:run &'
+                        }
+                    }
+                }
+                stage('Products Service') {
+                    steps {
+                        dir('productsService') {
+                            sh 'mvn clean compile spring-boot:run &'
+                        }
+                    }
+                }
+                stage('Todo Service') {
+                    steps {
+                        dir('todoService') {
+                            sh 'mvn clean compile spring-boot:run &'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

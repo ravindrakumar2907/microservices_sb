@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo 'Pulling the latest codebase...'
+                // Jenkins automatically handles checkout if this is a multibranch/SCM pipeline
+            }
+        }
+
+        stage('Stop Existing Services') {
+            steps {
+                echo 'Tearing down any existing containers to free up ports...'
+                // Removes old containers and cleans up internal networks safely
+                sh 'docker compose down'
+            }
+        }
+
+        stage('Build and Launch Services') {
+            steps {
+                echo 'Building Docker images and launching microservices...'
+                // --build forces Docker to pick up your latest code changes
+                // -d runs the containers in the background so Jenkins can complete the build successfully
+                sh 'docker compose up -d --build'
+            }
+        }
+
+        stage('Verify Health') {
+            steps {
+                echo 'Waiting for services to stabilize...'
+                sleep time: 10, unit: 'SECONDS'
+
+                echo 'Checking running containers:'
+                sh 'docker compose ps'
+            }
+        }
+    }
+}

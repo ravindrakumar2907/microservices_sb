@@ -1,54 +1,27 @@
 pipeline {
-     agent any
+    agent any
 
-        tools {
-            // Double check this matches the exact Name you configured in Manage Jenkins -> Tools
-            maven 'mavan-3.10.0'
-        }
-
-        // FIXED: Changed 'env' to 'environment'
-        environment {
-             BUILD_NO = '1.0'
-        }
     stages {
-        stage('Clean Compile') {
-                    steps {
-                        echo 'Cleaning and compiling the code...'
+        stage('Checkout Code') {
+            steps {
+                echo 'Pulling the latest codebase...'
+            }
+        }
 
-                        // FIXED: Using dir() ensures Jenkins safely enters and leaves the folder
-                        dir('apiGateway') {
-                            sh 'mvn clean compile'
-                        }
-                        dir('eurekaServer') {
-                            sh 'mvn clean compile'
-                        }
-                        dir('productsService') {
-                            sh 'mvn clean compile'
-                        }
-                        dir('todoService') {
-                            sh 'mvn clean compile'
-                        }
-                    }
-        },
-        stage('Run Projects (Deploy)') {
-                            steps {
-                                echo 'Running the projects...'
+        stage('Stop Existing Services') {
+            steps {
+                echo 'Tearing down old containers using script...'
+                // Executes your stop script from the root workspace directory
+                sh './stop-compose.sh'
+            }
+        }
 
-                                // FIXED: Using dir() ensures Jenkins safely enters and leaves the folder
-                                dir('apiGateway') {
-                                    sh 'mvn spring-boot:deploy'
-                                }
-                                dir('eurekaServer') {
-                                    sh 'mvn spring-boot:deploy'
-                                }
-                                dir('productsService') {
-                                    sh 'mvn spring-boot:deploy'
-                                }
-                                dir('todoService') {
-                                    sh 'mvn spring-boot:deploy'
-                                }
-                            }
-                }
+        stage('Build and Launch Services') {
+            steps {
+                echo 'Building and starting microservices using script...'
+                // Executes your start script to handle build orchestration
+                sh './start-compose.sh'
+            }
+        }
     }
-
 }
