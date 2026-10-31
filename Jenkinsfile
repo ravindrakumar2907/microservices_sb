@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     tools{
-        maven '3.6.0'
+        maven 'mavan-3.10.0'  // installed in jenkins tool
     }
     env {
-        MAVEN_HOME = '/usr/share/maven'
+        //MAVEN_HOME = '/usr/share/maven'
     }
     stages {
         stage('Clean Compile') {
