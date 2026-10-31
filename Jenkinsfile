@@ -29,18 +29,26 @@ pipeline {
                             sh 'mvn clean compile'
                         }
                     }
-        }
-    }
-        /*
-        stage('Deploy') {
-                    steps {
-                        echo 'Deploying the application...'
-                        sh 'cd eurekaServer && mvn spring-boot:deploy'
-                        sh 'cd apiGateway && mvn spring-boot:deploy'
-                        sh 'cd productsService && mvn spring-boot:deploy'
-                        sh 'cd todoService && mvn spring-boot:deploy'
-                    }
+        },
+        stage('Run Projects (Deploy)') {
+                            steps {
+                                echo 'Running the projects...'
+
+                                // FIXED: Using dir() ensures Jenkins safely enters and leaves the folder
+                                dir('apiGateway') {
+                                    sh 'mvn spring-boot:deploy'
+                                }
+                                dir('eurekaServer') {
+                                    sh 'mvn spring-boot:deploy'
+                                }
+                                dir('productsService') {
+                                    sh 'mvn spring-boot:deploy'
+                                }
+                                dir('todoService') {
+                                    sh 'mvn spring-boot:deploy'
+                                }
+                            }
                 }
-    }*/
+    }
 
 }
