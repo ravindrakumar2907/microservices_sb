@@ -22,7 +22,7 @@ WORKDIR /app
 
 RUN ls -altr
 # Copy the JAR from the build stage
-COPY --from=build /build/target/apiGateway.jar app.jar
+COPY --from=build /build/target/*.jar app.jar
 
 # Create non-root user with specific UID/GID (for consistency across environments)
 RUN addgroup -g 1001 -S techravi && \
