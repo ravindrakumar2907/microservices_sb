@@ -2,7 +2,7 @@ stages {
     stage('Clone Repository') {
         steps {
             echo 'Cloning the microservices source code...'
-            checkout scm
+            //checkout scm
         }
     }
 
