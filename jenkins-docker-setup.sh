@@ -24,6 +24,8 @@ apt-get install -y curl
 curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
 -o /usr/local/lib/docker/cli-plugins/docker-compose
 chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+curl -SL https://github.com/docker/buildx/releases/download/v0.17.1/buildx-v0.17.1.linux-amd64 \
+-o /usr/local/lib/docker/cli-plugins/docker-buildx
 
 docker exec -it jenkins docker --version
 docker exec -it jenkins docker compose version

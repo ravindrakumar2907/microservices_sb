@@ -2,14 +2,14 @@
 
 set -e
 
-echo "🚀 Starting all microservices..."
+echo "Starting all microservices..."
 
-docker compose down
+docker compose build
 
-docker compose up -d --build
+docker compose up -d
 
-echo "📊 Current status of containers..."
+echo "Current container status:"
 
 docker compose ps
 
-echo "✅ All microservices started successfully!"
+echo "All microservices started successfully!"
