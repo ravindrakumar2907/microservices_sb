@@ -8,7 +8,7 @@ pipeline {
 
         // FIXED: Changed 'env' to 'environment'
         environment {
-            // MAVEN_HOME = '/usr/share/maven'
+             BUILD_NO = '1.0'
         }
     stages {
         stage('Clean Compile') {
