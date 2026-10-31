@@ -17,7 +17,7 @@ pipeline {
                 sh 'cd todoService && mvn clean compile'
             }
         }
-        /*,
+        /*
         stage('Deploy') {
                     steps {
                         echo 'Deploying the application...'
