@@ -2,6 +2,18 @@ pipeline {
     agent any
 
     stages {
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the microservices source code...'
+                // Explicitly clones your repo into the workspace folder
+                checkout scm: [
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'https://github.com', credentialsId: 'github-jenkins-token']]
+                ]
+            }
+        }
+
         stage('Stop Existing Services') {
             steps {
                 echo 'Tearing down old containers...'
